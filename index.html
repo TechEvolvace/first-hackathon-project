@@ -1,44 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custom IDE</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/pyodide@0.26.3/pyodide.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs/loader.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom IDE - Cybercrime Task Force</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs/loader.min.js"></script>
+    <!-- Include Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
 </head>
 <body>
-  <div class="ide-container">
-    <!-- Sidebar for File Explorer and Package Management -->
     <div class="sidebar">
-      <div class="explorer">
         <h3>Explorer</h3>
-        <ul id="file-structure">
-          <!-- Sample file structure -->
-          <li onclick="loadFile('main.py')">main.py</li>
-          <li onclick="loadFile('helpers.py')">helpers.py</li>
+        <ul id="fileExplorer">
+            <li><button onclick="loadActivity(1)">Activity 1: Detect Unauthorized Access</button></li>
+            <li><button onclick="loadActivity(2)">Activity 2: Identify Email Sender</button></li>
+            <li><button onclick="loadActivity(3)">Activity 3: Stop DDoS Attack</button></li>
         </ul>
-      </div>
-      <div class="packages">
-        <h3>Python Packages</h3>
-        <button onclick="installPackage('numpy')">Install Numpy</button>
-        <button onclick="uninstallPackage('numpy')">Uninstall Numpy</button>
-        <div id="package-status"></div>
-      </div>
+
+        <h3>Extensions</h3>
+        <ul id="packageManager">
+            <li><button onclick="installPackage('numpy')">Install Numpy</button></li>
+            <li><button onclick="installPackage('pandas')">Install Pandas</button></li>
+            <li><button onclick="installPackage('scipy')">Install Scipy</button></li>
+        </ul>
+
+        <button onclick="resetIDE()">Retry</button>
     </div>
 
-    <!-- Main IDE Area -->
-    <div class="main-ide">
-      <div id="editor-container"></div>
-      <button onclick="runPythonCode()">Run Code</button>
-      <div id="output-container"></div>
+    <div class="editor-container">
+        <div id="editor"></div>
+        <button onclick="runCode()">Run Code</button>
+        <div id="output"></div>
     </div>
-  </div>
 
-  <script src="js/script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
-
-
 

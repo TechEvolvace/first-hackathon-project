@@ -1,60 +1,59 @@
-// Load Pyodide for Python execution
-async function initializePyodide() {
-    self.pyodide = await loadPyodide();
-}
-initializePyodide();
-  
-// Load Monaco Editor
-require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs' }});
-require(['vs/editor/editor.main'], function () {
-    window.editor = monaco.editor.create(document.getElementById('editor-container'), {
-        value: '# Start coding in Python...\n',
+let editor;
+let pyodide;
+const activityFiles = {
+    1: "print('Detect unauthorized access')",
+    2: "print('Identify email sender')",
+    3: "print('Stop DDoS attack')"
+};
+const installedPackages = JSON.parse(localStorage.getItem('installedPackages')) || {};
+
+require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs' } });
+require(['vs/editor/editor.main'], async function() {
+    editor = monaco.editor.create(document.getElementById('editor'), {
+        value: '',
         language: 'python',
-        theme: 'vs-dark',
-        automaticLayout: true
+        theme: 'vs-dark'
     });
+    await initializePyodide();
+    loadActivity(1); // Load first activity by default
 });
-  
-// Load file content into the editor
-function loadFile(filename) {
-    const fileContents = {
-        'main.py': 'print("Hello from main.py")',
-        'helpers.py': 'def greet():\n    print("Hello from helpers.py")'
-    };
-    editor.setValue(fileContents[filename] || "# File not found.");
+
+// Initialize Pyodide
+async function initializePyodide() {
+    pyodide = await loadPyodide();
 }
 
-// Run Python code from the editor
-async function runPythonCode() {
-const code = editor.getValue();
+async function loadActivity(activityNumber) {
+    editor.setValue(activityFiles[activityNumber]);
+    document.getElementById('output').textContent = ''; // Clear output
+}
+
+async function runCode() {
+    const code = editor.getValue();
     try {
         let output = await pyodide.runPythonAsync(code);
-        document.getElementById('output-container').textContent = output || "Code ran successfully.";
-    } catch (err) {
-        document.getElementById('output-container').textContent = "Error: " + err;
+        document.getElementById('output').textContent = output;
+    } catch (error) {
+        document.getElementById('output').textContent = `Error: ${error.message}`;
     }
 }
 
-// Package installation and uninstallation
-async function installPackage(packageName) {
-document.getElementById('package-status').textContent = `Installing ${packageName}...`;
-    try {
-        await pyodide.loadPackage(packageName);
-        document.getElementById('package-status').textContent = `${packageName} installed successfully.`;
-    } catch (err) {
-        document.getElementById('package-status').textContent = `Failed to install ${packageName}: ${err}`;
+function installPackage(packageName) {
+    if (!installedPackages[packageName]) {
+        installedPackages[packageName] = true;
+        localStorage.setItem('installedPackages', JSON.stringify(installedPackages));
+        alert(`${packageName} installed successfully.`);
+    } else {
+        alert(`${packageName} is already installed.`);
     }
 }
 
-async function uninstallPackage(packageName) {
-document.getElementById('package-status').textContent = `Uninstalling ${packageName}...`;
-    try {
-        pyodide.pyimport(packageName);  // Ensure package is loaded
-        pyodide.pyunimport(packageName); // Unload package
-        document.getElementById('package-status').textContent = `${packageName} uninstalled successfully.`;
-    } catch (err) {
-        document.getElementById('package-status').textContent = `Failed to uninstall ${packageName}: ${err}`;
-    }
+function resetIDE() {
+    localStorage.clear(); // Clear installed packages
+    loadActivity(1); // Reset to activity 1
+    alert("IDE reset to default state.");
+    document.getElementById('output').textContent = ''; // Clear output
 }
+
   
   
