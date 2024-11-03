@@ -3,37 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>First Hackathon Game</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
-
-
-
+    <title>In-Game IDE with Python Execution</title>
+    <!-- Include Phaser.js and Pyodide -->
+    <script src="path/to/phaser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+    <!-- Include Monaco Editor via CDN -->
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/editor/editor.main.css">
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js"></script>
+    
+    <!-- Internal CSS style applied here, but the current External CSS file is not connected! -->
     <style>
-        body {margin: 0;}
-        canvas {display: block;}
+        #editor { height: 300px; width: 80%; margin-bottom: 10px; }
+        #output { height: 100px; width: 80%; margin-top: 10px; border: 1px solid #ddd; padding: 10px; overflow-y: auto; background: #f5f5f5; }
+        #extensions { display: flex; flex-direction: column; width: 200px; padding: 10px; background: #eee; border: 1px solid #ddd; }
+        #runCodeBtn { margin-top: 10px; }
     </style>
 </head>
 <body>
-    <!-- Interactive Development Environment (a.k.a. Code Editor) -->
-    <div id="editor" style="width: 800px; height: 600px; border: 1px solid #ccc;">
-        <div id="extensions-sidebar">
-            <h3>Extensions</h3>
-            <ul>
-                <li class="extension required">Python</li>
-                <li class="extension">NumPy</li>
-                <li class="extension">Pandas</li>
-                <!-- Highlight required packages as you specified -->
-            </ul>
-        </div>
-        <div id="code-editor">
-            <textarea id="editor-textarea" placeholder="Type your code here..."></textarea>
-            <button id="run-code">Run Code</button>
-        </div>
+    <div id="editor"></div>
+    <button id="runCodeBtn">Run Code</button>
+    <div id="output">Output will appear here...</div>
+    <div id="extensions">
+        <h3>Extensions</h3>
+        <button class="install-btn" data-package="numpy">Install NumPy</button>
+        <button class="install-btn" data-package="scikit-learn">Install scikit-learn</button>
+        <button class="install-btn" data-package="pandas">Install pandas</button>
     </div>
-    <div id="game-container"></div>
-
-    <script src="node_modules/phaser/dist/phaser.min.js"></script>
     <script src="/js/script.js"></script>
 </body>
 </html>
