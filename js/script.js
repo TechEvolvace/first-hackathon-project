@@ -30,13 +30,17 @@ function update() {
 }
 
 // Code Evaluation Function
-document.getElementById("run-code").addEventListener("click", () => {
-    const code = document.getElementById("editor-textarea").value;
+document.getElementById('run-code').addEventListener('click', function() {
+    const code = document.getElementById('code-editor').value;
+
     try {
-        // Here we're using eval for demo purposes; later, integrate with Python functionality
-        eval(code); 
+        // Evaluate the code (be cautious with eval in production)
+        const result = eval(code); // Use with caution: only for controlled input
+        console.log(result); // Output result to console (you could display it in the IDE)
     } catch (error) {
-        console.error("Error in code:", error);
-        alert("Error in code: " + error.message);
+        // Display error in the error output area
+        const errorOutput = document.getElementById('error-output');
+        errorOutput.innerText = error.message;
+        errorOutput.style.display = 'block'; // Show error output
     }
 });

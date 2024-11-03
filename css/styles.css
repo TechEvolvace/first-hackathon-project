@@ -1,64 +1,40 @@
-body, html {
+/* style.css */
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #1e1e1e;
+    color: #ffffff;
     margin: 0;
     padding: 0;
+}
+
+#ide {
     display: flex;
-    font-family: Arial, sans-serif;
-    background-color: #2c2f33;
-    color: #ffffff;
+    flex-direction: column;
+    height: 100vh;
 }
 
 #editor-container {
-    display: flex;
-    width: 40%;
-    flex-direction: column;
-    background: #202225;
+    flex: 1;
     padding: 10px;
-}
-
-#extensions-sidebar {
-    background: #292b2f;
-    padding: 10px;
-    height: 150px;
-}
-
-#extensions-sidebar h3 {
-    color: #ffffff;
-    margin: 0;
-}
-
-.extension {
-    cursor: pointer;
-    padding: 5px;
-}
-
-.required {
-    font-weight: bold;
-    color: #ffcc00; /* Highlight */
 }
 
 #code-editor {
-    flex: 1;
-    margin-top: 10px;
-}
-
-#editor-textarea {
     width: 100%;
-    height: 80%;
-    background-color: #1e1e1e;
-    color: #dcdcdc;
-    font-family: monospace;
-    font-size: 14px;
-    padding: 10px;
-    border: none;
-    resize: none;
-}
-
-#run-code {
-    margin-top: 10px;
-    padding: 10px;
-    width: 100%;
-    background-color: #7289da;
-    border: none;
-    cursor: pointer;
+    height: 100%;
+    background-color: #272727;
     color: #ffffff;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    resize: none; /* Disable resizing */
+}
+
+#controls {
+    margin: 10px 0;
+}
+
+#error-output {
+    background-color: #ff4d4d;
+    padding: 10px;
+    display: none; /* Hidden by default */
 }
