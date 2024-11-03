@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>First Hackathon Game</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
-    <style>
-        body {margin: 0;}
-        canvas {display: block;}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom IDE Game</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs/loader.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
 </head>
 <body>
-    <div id="editor-container">
-        <div id="extensions-sidebar">
-            <h3>Extensions</h3>
-            <ul>
-                <li class="extension required">Python</li>
-                <li class="extension">NumPy</li>
-                <li class="extension">Pandas</li>
-                <!-- Highlight required packages as you specified -->
-            </ul>
-        </div>
-        <div id="code-editor">
-            <textarea id="editor-textarea" placeholder="Type your code here..."></textarea>
-            <button id="run-code">Run Code</button>
-        </div>
+  <div id="sidebar">
+    <div id="explorer">
+      <h3>Explorer</h3>
+      <button onclick="startActivity(1)">Activity 1: Detect Unauthorized Access</button>
+      <button onclick="startActivity(2)">Activity 2: Identify Email Sender</button>
+      <button onclick="startActivity(3)">Activity 3: Stop DDoS Attack</button>
     </div>
-    <div id="game-container"></div>
+    <div id="extensions">
+      <h3>Extensions</h3>
+      <button onclick="installPackage('numpy')">Install Numpy</button>
+      <button onclick="installPackage('pandas')">Install Pandas</button>
+      <button onclick="installPackage('scipy')">Install Scipy</button>
+      <button onclick="resetEnvironment()">Retry</button>
+    </div>
+  </div>
 
-    <script src="node_modules/phaser/dist/phaser.min.js"></script>
-    <script src="/js/script.js"></script>
+  <div id="main">
+    <div id="editor-container"></div>
+    <button id="run-code-btn" onclick="runPythonCode()">Run Code</button>
+    <div id="output"></div>
+  </div>
+
+  <div id="dialogue-box">
+    <div id="dialogue-character"></div>
+    <div id="dialogue-text"></div>
+    <div id="dialogue-options"></div>
+  </div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
