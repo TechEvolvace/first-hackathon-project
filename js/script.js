@@ -1,3 +1,14 @@
+// Configure Monaco to support Python syntax highlighting
+import * as monaco from 'monaco-editor';
+
+const editor = monaco.editor.create(document.getElementById('editor'), {
+    value: "# Write your Python code here",
+    language: "python",
+    theme: "vs-dark",
+    automaticLayout: true
+});
+
+
 // Phaser Game Configuration
 const config = {
     type: Phaser.AUTO,
