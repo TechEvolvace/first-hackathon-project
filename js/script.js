@@ -17,29 +17,30 @@ async function initialize() {
 
 // Run Python code and handle output
 async function runPythonCode() {
-  const code = editor.getValue();
-  console.log("Running code:", code); // Log the code being run
-  try {
-    // Clear previous output
-    document.getElementById("output").innerText = "";
-    
-    // Redirect print statements to output area
-    const originalPrint = pyodide.globals.get('print');
-    pyodide.globals.set('print', (msg) => {
-      const currentOutput = document.getElementById("output").innerText;
-      document.getElementById("output").innerText = currentOutput + msg + "\n";
-    });
-
-    // Execute the code
-    await pyodide.runPythonAsync(code);
-  } catch (error) {
-    console.error("Error running code:", error); // Log the error
-    document.getElementById("output").innerText = error;
-  } finally {
-    // Restore original print function
-    pyodide.globals.set('print', originalPrint);
+    const code = editor.getValue();
+    console.log("Running code:", code); // Log the code being run
+    try {
+      // Clear previous output
+      document.getElementById("output").innerText = "";
+      
+      // Redirect print statements to output area
+      const originalPrint = pyodide.globals.get('print');
+      pyodide.globals.set('print', (msg) => {
+        const currentOutput = document.getElementById("output").innerText;
+        document.getElementById("output").innerText = currentOutput + msg + "\n";
+      });
+  
+      // Execute the code
+      await pyodide.runPythonAsync(code);
+    } catch (error) {
+      console.error("Error running code:", error); // Log the error
+      document.getElementById("output").innerText = error;
+    } finally {
+      // Restore original print function
+      pyodide.globals.set('print', originalPrint);
+    }
   }
-}
+  
 
 // Manage Python packages
 async function installPackage(packageName) {
