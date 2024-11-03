@@ -62,27 +62,27 @@ function resetEnvironment() {
 let dialogues = {
   start: {
     character: "Alexo Wraith",
-    text: "Do you have experience with Python?",
+    text: "Ah, you must be the new agent! I'm Alexo Wraith, nice to meet ya. Have you programmed with Python before?",
     options: [
-      { text: "Yes", next: "activity2" },
-      { text: "No", next: "activity1" }
+      { text: "Yes I have.", next: "activity2" },
+      { text: "No I haven't", next: "activity1" }
     ]
   },
   activity1: {
     character: "Alexo Wraith",
-    text: "Let’s start with identifying unauthorized access.",
+    text: "No worries, we've all been there. I'll wall you through the basics. We use a custom Interactive Development Environment, or IDE for short, here. It's modeled after Visual Studio Code, so it's user-friently, even if you're a beginner. Let's get started with programming a script to detect anything suspicious lurking in our networks, shall we?",
     options: [{ text: "Continue", next: "activity1_start" }]
   },
   activity1_start: {
     character: "Guide",
     text: "Here is your starter code for detecting unauthorized access.",
-    onEnter: () => editor.setValue("# Activity 1 starter code...\nprint('Unauthorized access detected!')"),
+    onEnter: () => editor.setValue("# Activity 1 starter code loading... This may take a while."),
     options: [{ text: "Begin", next: null }]
   },
   activity2: {
     character: "Alexo Wraith",
-    text: "Let's look for the sender of the email.",
-    onEnter: () => editor.setValue("# Activity 2 starter code...\nprint('Identifying email sender...')"),
+    text: "Good to know you've got some experience. That'll make this a breeze. Let's skip the basics and dive into identifying the sender of this suspicious email we received today.",
+    onEnter: () => editor.setValue("# Activity 2 starter code loading... This may take a while."),
     options: [{ text: "Begin", next: null }]
   }
 };
