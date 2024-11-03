@@ -1,42 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game IDE</title>
-    <style>
-        /* Styling for the custom IDE layout */
-        #editor-container {
-            width: 100%;
-            height: 60vh;
-            border: 1px solid #ddd;
-            box-sizing: border-box;
-        }
-        #output-container {
-            width: 100%;
-            height: 20vh;
-            border: 1px solid #ddd;
-            margin-top: 10px;
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            padding: 10px;
-            overflow-y: scroll;
-            font-family: monospace;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom IDE</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/pyodide@0.26.3/pyodide.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs/loader.min.js"></script>
 </head>
-<<body>
-    <div id="editor-container"></div>
-    <button onclick="runPythonCode()">Run Code</button>
-    <button onclick="installPackage('numpy')">Install Numpy</button>
-    <button onclick="uninstallPackage('numpy')">Uninstall Numpy</button>
-    <div id="output-container" id="output"></div>
+<body>
+  <div class="ide-container">
+    <!-- Sidebar for File Explorer and Package Management -->
+    <div class="sidebar">
+      <div class="explorer">
+        <h3>Explorer</h3>
+        <ul id="file-structure">
+          <!-- Sample file structure -->
+          <li onclick="loadFile('main.py')">main.py</li>
+          <li onclick="loadFile('helpers.py')">helpers.py</li>
+        </ul>
+      </div>
+      <div class="packages">
+        <h3>Python Packages</h3>
+        <button onclick="installPackage('numpy')">Install Numpy</button>
+        <button onclick="uninstallPackage('numpy')">Uninstall Numpy</button>
+        <div id="package-status"></div>
+      </div>
+    </div>
 
-    <!-- Monaco Editor and Pyodide scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.js"></script>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
-    <script src="js/script.js"></script>
+    <!-- Main IDE Area -->
+    <div class="main-ide">
+      <div id="editor-container"></div>
+      <button onclick="runPythonCode()">Run Code</button>
+      <div id="output-container"></div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
+
 
 

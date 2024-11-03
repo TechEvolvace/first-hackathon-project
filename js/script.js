@@ -1,95 +1,60 @@
-// Global variables
-let pyodide;
-let editor;
-
-// Initialize Monaco Editor
-function initMonacoEditor() {
-    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs' }});
-    require(['vs/editor/editor.main'], function () {
-        editor = monaco.editor.create(document.getElementById('editor-container'), {
-            value: '# Type your Python code here\nprint("Hello, World!")',
-            language: 'python',
-            theme: 'vs-dark',
-            automaticLayout: true
-        });
+// Load Pyodide for Python execution
+async function initializePyodide() {
+    self.pyodide = await loadPyodide();
+}
+initializePyodide();
+  
+// Load Monaco Editor
+require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs' }});
+require(['vs/editor/editor.main'], function () {
+    window.editor = monaco.editor.create(document.getElementById('editor-container'), {
+        value: '# Start coding in Python...\n',
+        language: 'python',
+        theme: 'vs-dark',
+        automaticLayout: true
     });
+});
+  
+// Load file content into the editor
+function loadFile(filename) {
+    const fileContents = {
+        'main.py': 'print("Hello from main.py")',
+        'helpers.py': 'def greet():\n    print("Hello from helpers.py")'
+    };
+    editor.setValue(fileContents[filename] || "# File not found.");
 }
 
-// Initialize Pyodide and load packages
-async function initPyodideAndLoadPackages() {
-    pyodide = await loadPyodide();
-    console.log("Pyodide loaded with version:", pyodide.version);
-
-    // Redirect Python's stdout and stderr
-    pyodide.runPython(`
-        import sys
-        class ConsoleCapture:
-            def __init__(self):
-                self.output = []
-            
-            def write(self, text):
-                if text != '\\n':  # Filter out empty lines
-                    self.output.append(text)
-                    # Use JS function to print to the game's console
-                    self.flush()
-            
-            def flush(self):
-                import js
-                js.displayOutput("\\n".join(self.output))
-                self.output = []
-        
-        sys.stdout = ConsoleCapture()
-        sys.stderr = ConsoleCapture()
-    `);
-
-    displayOutput("Pyodide initialized.");
-}
-
-// Run Python code
+// Run Python code from the editor
 async function runPythonCode() {
-    const code = editor.getValue();
+const code = editor.getValue();
     try {
-        await pyodide.runPythonAsync(code);
-        displayOutput("Code executed successfully.");
-    } catch (error) {
-        displayOutput(`Error: ${error}`);
+        let output = await pyodide.runPythonAsync(code);
+        document.getElementById('output-container').textContent = output || "Code ran successfully.";
+    } catch (err) {
+        document.getElementById('output-container').textContent = "Error: " + err;
     }
 }
 
-// Display output in the custom console
-function displayOutput(message) {
-    const outputEl = document.getElementById("output-container");
-    outputEl.innerText += message + "\n";
-    outputEl.scrollTop = outputEl.scrollHeight;
-}
-
-// Install a Python package
+// Package installation and uninstallation
 async function installPackage(packageName) {
+document.getElementById('package-status').textContent = `Installing ${packageName}...`;
     try {
-        displayOutput(`Installing ${packageName}...`);
-        await pyodide.runPythonAsync(`import micropip; await micropip.install('${packageName}')`);
-        displayOutput(`Package ${packageName} installed.`);
-    } catch (error) {
-        displayOutput(`Error installing ${packageName}: ${error}`);
+        await pyodide.loadPackage(packageName);
+        document.getElementById('package-status').textContent = `${packageName} installed successfully.`;
+    } catch (err) {
+        document.getElementById('package-status').textContent = `Failed to install ${packageName}: ${err}`;
     }
 }
 
-// Uninstall a Python package
 async function uninstallPackage(packageName) {
+document.getElementById('package-status').textContent = `Uninstalling ${packageName}...`;
     try {
-        displayOutput(`Uninstalling ${packageName}...`);
-        await pyodide.runPythonAsync(`
-            import micropip
-            micropip.uninstall('${packageName}')
-        `);
-        displayOutput(`Package ${packageName} uninstalled.`);
-    } catch (error) {
-        displayOutput(`Error uninstalling ${packageName}: ${error}`);
+        pyodide.pyimport(packageName);  // Ensure package is loaded
+        pyodide.pyunimport(packageName); // Unload package
+        document.getElementById('package-status').textContent = `${packageName} uninstalled successfully.`;
+    } catch (err) {
+        document.getElementById('package-status').textContent = `Failed to uninstall ${packageName}: ${err}`;
     }
 }
-
-// Initialize Monaco Editor and Pyodide on page load
-window.onload = async function () {
-    initMonacoEditor();
-    await initPyodideAndLoadPackages();
-};
+  
+  
