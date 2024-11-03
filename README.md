@@ -4,7 +4,7 @@
 This is my submission for FreeTail Hacker's HackTX 2024 event. 
 
 ### Purpose of the Video Game
-This is intended to be a video game where the player takes the role of a recently hired agent for the Cybercrime Resolution Intervention Agency (CRIA, for short) to stop cyberattacks launched by the large cybercriminal organization Majhack. You, the player, shall learn about machine learning techniques and apply them by programming in the game's custom Interactive Development Environment (IDE) to help the agency stop the cyberattacks. 
+This is intended to be a video game where the player takes the role of a recently hired agent for the Cybercrime Resolution Intervention Agency (CRIA, for short) to stop cyberattacks launched by the large cybercriminal organization Majhack. You, the player, shall learn about machine learning techniques and apply them by programming in the game's custom designed Interactive Development Environment (IDE) to help the agency stop the cyberattacks. 
 
 This video game doesn't require players to have any understanding and/or experience with programming with machine learning in Python.
 

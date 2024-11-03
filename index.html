@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Hackathon Game</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
+</head>
+<body>
+    <div id="editor-container">
+        <div id="extensions-sidebar">
+            <h3>Extensions</h3>
+            <ul>
+                <li class="extension required">Python</li>
+                <li class="extension">NumPy</li>
+                <li class="extension">Pandas</li>
+                <!-- Highlight required packages as you specified -->
+            </ul>
+        </div>
+        <div id="code-editor">
+            <textarea id="editor-textarea" placeholder="Type your code here..."></textarea>
+            <button id="run-code">Run Code</button>
+        </div>
+    </div>
+    <div id="game-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
