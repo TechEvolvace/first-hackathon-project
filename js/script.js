@@ -16,6 +16,7 @@ const game = new Phaser.Game(config);
 
 function preload() {
     // Preload any assets here (e.g., character images, background).
+    console.log("Phaser is running!");
 }
 
 function create() {
