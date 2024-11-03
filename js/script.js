@@ -1,78 +1,95 @@
+// Global variables
 let pyodide;
 let editor;
 
-// Initialize Pyodide for Python execution
-async function loadPyodideAndPackages() {
+// Initialize Monaco Editor
+function initMonacoEditor() {
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs' }});
+    require(['vs/editor/editor.main'], function () {
+        editor = monaco.editor.create(document.getElementById('editor-container'), {
+            value: '# Type your Python code here\nprint("Hello, World!")',
+            language: 'python',
+            theme: 'vs-dark',
+            automaticLayout: true
+        });
+    });
+}
+
+// Initialize Pyodide and load packages
+async function initPyodideAndLoadPackages() {
     pyodide = await loadPyodide();
-    console.log("Pyodide loaded.");
+    console.log("Pyodide loaded with version:", pyodide.version);
+
+    // Redirect Python's stdout and stderr
+    pyodide.runPython(`
+        import sys
+        class ConsoleCapture:
+            def __init__(self):
+                self.output = []
+            
+            def write(self, text):
+                if text != '\\n':  # Filter out empty lines
+                    self.output.append(text)
+                    # Use JS function to print to the game's console
+                    self.flush()
+            
+            def flush(self):
+                import js
+                js.displayOutput("\\n".join(self.output))
+                self.output = []
+        
+        sys.stdout = ConsoleCapture()
+        sys.stderr = ConsoleCapture()
+    `);
+
+    displayOutput("Pyodide initialized.");
 }
 
-// Load Monaco Editor
-require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' }});
-require(['vs/editor/editor.main'], function () {
-    editor = monaco.editor.create(document.getElementById('editor'), {
-        value: '# Write your Python code here...',
-        language: 'python',
-        theme: 'vs-dark',
-        automaticLayout: true
-    });
-    console.log("Monaco Editor initialized.");
-});
-
-// Function to run Python code from the editor
+// Run Python code
 async function runPythonCode() {
-    const code = editor.getValue(); // Get code from the editor
-    const outputElement = document.getElementById('output');
-
+    const code = editor.getValue();
     try {
-        const result = await pyodide.runPythonAsync(code);
-        outputElement.innerText = result;
-        outputElement.style.color = 'black'; // Success message color
+        await pyodide.runPythonAsync(code);
+        displayOutput("Code executed successfully.");
     } catch (error) {
-        outputElement.innerText = `Error: ${error.message}`;
-        outputElement.style.color = 'red'; // Error message color
-        console.error("Execution error:", error);
+        displayOutput(`Error: ${error}`);
     }
 }
 
-// Add event listener to "Run Code" button
-document.getElementById('runCodeBtn').addEventListener('click', runPythonCode);
+// Display output in the custom console
+function displayOutput(message) {
+    const outputEl = document.getElementById("output-container");
+    outputEl.innerText += message + "\n";
+    outputEl.scrollTop = outputEl.scrollHeight;
+}
 
-// Package installation simulation
-const installedPackages = {};
-
+// Install a Python package
 async function installPackage(packageName) {
-    const outputElement = document.getElementById('output');
-
-    if (installedPackages[packageName]) {
-        outputElement.innerText = `${packageName} is already installed.`;
-        outputElement.style.color = 'blue';
-        return;
-    }
-
     try {
-        await pyodide.loadPackage(packageName); // Load the package in Pyodide
-        installedPackages[packageName] = true; // Mark package as installed
-        outputElement.innerText = `${packageName} installed successfully.`;
-        outputElement.style.color = 'green';
-
-        // Update the button to show installed status
-        document.querySelector(`[data-package="${packageName}"]`).innerText = "Installed";
+        displayOutput(`Installing ${packageName}...`);
+        await pyodide.runPythonAsync(`import micropip; await micropip.install('${packageName}')`);
+        displayOutput(`Package ${packageName} installed.`);
     } catch (error) {
-        outputElement.innerText = `Failed to install ${packageName}: ${error.message}`;
-        outputElement.style.color = 'red';
-        console.error("Installation error:", error);
+        displayOutput(`Error installing ${packageName}: ${error}`);
     }
 }
 
-// Add event listeners to package install buttons
-document.querySelectorAll('.install-btn').forEach(button => {
-    button.addEventListener('click', (event) => {
-        const packageName = event.target.getAttribute('data-package');
-        installPackage(packageName);
-    });
-});
+// Uninstall a Python package
+async function uninstallPackage(packageName) {
+    try {
+        displayOutput(`Uninstalling ${packageName}...`);
+        await pyodide.runPythonAsync(`
+            import micropip
+            micropip.uninstall('${packageName}')
+        `);
+        displayOutput(`Package ${packageName} uninstalled.`);
+    } catch (error) {
+        displayOutput(`Error uninstalling ${packageName}: ${error}`);
+    }
+}
 
-// Initialize Pyodide after loading
-loadPyodideAndPackages();
-
+// Initialize Monaco Editor and Pyodide on page load
+window.onload = async function () {
+    initMonacoEditor();
+    await initPyodideAndLoadPackages();
+};
