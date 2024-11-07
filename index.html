@@ -5,17 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cybercrime Ace Investigator Game</title>
   <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Using Content Delivery Network to get Pyodide and Monaco Editor -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs/loader.min.js"></script>
   <script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
 </head>
 <body>
+
+  <!-- Sidebar showing the extensions -->
   <div id="sidebar">
+
+    <!-- Explorer: show all relevant code files -->
     <div id="explorer">
       <h3>Explorer</h3>
       <button onclick="startActivity(1)">Activity 1: Detect Unauthorized Access</button>
       <button onclick="startActivity(2)">Activity 2: Identify Email Sender</button>
       <button onclick="startActivity(3)">Activity 3: Stop DDoS Attack</button>
     </div>
+
+    <!-- Extensions: show all relevant Python packages available to install and/or uninstall -->
     <div id="extensions">
       <h3>Extensions</h3>
       <button onclick="installPackage('numpy')">Install Numpy</button>
@@ -25,12 +33,14 @@
     </div>
   </div>
 
+  <!-- Game's custom designed Interactive Development Environment -->
   <div id="main">
     <div id="editor-container"></div>
     <button id="run-code-btn" onclick="runPythonCode()">Run Code</button>
     <div id="output"></div>
   </div>
 
+  <!-- Game Dialogue box -->
   <div id="dialogue-box">
     <div id="dialogue-character"></div>
     <div id="dialogue-text"></div>
